@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/NexCommerce.Domain.Tests/NexCommerce.Domain.Tests.csproj" />
+  </Folder>
   <Project Path="NexCommerce.API/NexCommerce.API.csproj" />
   <Project Path="NexCommerce.Application/NexCommerce.Application.csproj" />
   <Project Path="NexCommerce.Domain/NexCommerce.Domain.csproj" />
