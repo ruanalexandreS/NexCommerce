@@ -57,4 +57,29 @@ public sealed class Order : BaseEntity
         PaymentIntentId = paymentIntentId;
         Touch();
     }
+
+    public void Cancel()
+    {
+        if (Status is OrderStatus.Shipped or OrderStatus.Delivered)
+            throw new DomainException($"Pedido '{Status}' não pode ser cancelado.");
+
+        if (Status == OrderStatus.Cancelled) return;
+
+        Status = OrderStatus.Cancelled;
+        Touch();
+    }
+
+    public void Ship()
+    {
+        if (Status != OrderStatus.Paid) throw new DomainException("Apenas pedidos pagos podem ser enviados.");
+        Status = OrderStatus.Shipped;
+        Touch();
+    }
+
+    public void Deliver()
+    {
+        if (Status != OrderStatus.Shipped) throw new DomainException("Apenas pedidos enviados podem ser entregues.");
+        Status = OrderStatus.Delivered;
+        Touch();
+    }
 }
