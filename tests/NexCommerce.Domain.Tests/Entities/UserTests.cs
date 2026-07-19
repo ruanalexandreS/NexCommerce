@@ -96,4 +96,18 @@ public class UserTests
         user.IsActive.Should().BeFalse();
         token.IsActive.Should().BeFalse();
     }
+
+    [Fact]
+    public void Activate_ShouldNotRestoreRevokedTokens()
+    {
+        var user = CreateSut();
+        var token = CreateToken(user.Id);
+        user.AddRefreshToken(token);
+        user.Deactivate();
+
+        user.Activate();
+
+        user.IsActive.Should().BeTrue();
+        token.IsActive.Should().BeFalse();
+    }
 }

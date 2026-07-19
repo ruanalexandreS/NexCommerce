@@ -129,3 +129,28 @@ geraria JOIN ou N+1 em toda listagem de pedidos.
 - Ganho: histórico imutável e correto; listagem de pedidos sem JOIN em Products.
 - Custo: duplicação de dados. Correção de digitação no nome do produto não se
   propaga a pedidos já emitidos.
+
+---
+
+## ADR-007: TimeProvider adiado
+
+**Contexto:** entidades chamam `DateTime.UtcNow` diretamente em `Touch()`,
+`BaseEntity.CreatedAt` e `RefreshToken.Create`. O teste de expiração de token
+depende de `Thread.Sleep(10)` para simular passagem de tempo.
+
+**Decisão:** manter `DateTime.UtcNow`. Não adotar `TimeProvider` (.NET 8+) nesta
+etapa.
+
+**Alternativa considerada:** injetar `TimeProvider` no Domain e usar
+`FakeTimeProvider` nos testes. Descartada por ora: exigiria propagar o parâmetro
+por todas as entidades e factories, aumentando a cerimônia de cada `Create()`
+para resolver um único `Thread.Sleep(10)` numa suíte que roda em 2,7s.
+
+**Trade-off:**
+- Ganho: Domain sem dependência adicional; `Create()` permanece simples.
+- Custo: cenários de tempo longo (expiração de 30 dias) não são testáveis; o
+  teste de expiração depende do relógio do sistema e pode ficar instável em CI
+  saturado.
+
+**Revisar quando:** a camada Application precisar testar expiração de JWT ou
+rotação de refresh token com janelas de tempo realistas.

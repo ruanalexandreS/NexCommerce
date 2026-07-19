@@ -59,4 +59,12 @@ public sealed class User : BaseEntity
         RevokeAllTokens("Usuário desativado.");
         Touch();
     }
+
+    public void Activate()
+    {
+        if (IsActive) return;
+
+        IsActive = true;
+        Touch();
+    }
 }
