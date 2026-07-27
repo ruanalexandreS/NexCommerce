@@ -9,7 +9,7 @@ public sealed class NexCommerceDbContext(DbContextOptions<NexCommerceDbContext> 
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Order> Orders => Set<Order>();
-    public DBSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

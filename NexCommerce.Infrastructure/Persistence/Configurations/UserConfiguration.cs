@@ -18,6 +18,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasIndex(u => u.Email).IsUnique();
 
-        builder.Metadata.FindNavigation(nameof(User.RefreshTokens))!.SetPropertyAcessMode(PropertyAcessMode.Field);
+        builder.Metadata.FindNavigation(nameof(User.RefreshTokens))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
