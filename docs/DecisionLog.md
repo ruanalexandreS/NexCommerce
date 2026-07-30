@@ -3,15 +3,16 @@
 Registro das decisões técnicas do NexCommerce. Cada entrada documenta o contexto,
 a alternativa considerada e o trade-off aceito.
 
-|  #  |           Decisão              |   Data  | Status |
-|-----|--------------------------------|---------|--------|
-| 001 | .NET 9 fixado via global.json  | 2026-07 | Aceita |
-| 002 | FluentAssertions 6.12.2        | 2026-07 | Aceita |
-| 003 | Value Objects não implementados| 2026-07 | Aceita |
-| 004 | Guid v7 como chave primária    | 2026-07 | Aceita |
-| 005 | SHA-256 no TokenHash           | 2026-07 | Aceita |
-| 006 | Snapshot de preço em OrderItem | 2026-07 | Aceita |
-| 007 | TimeProvider adiado            | 2026-07 | Adiada |
+|  #  |                 Decisão                  |  Data   | Status |
+|-----|------------------------------------------|---------|--------|
+| 001 | .NET 9 fixado via global.json            | 2026-07 | Aceita |
+| 002 | FluentAssertions 6.12.2                  | 2026-07 | Aceita |
+| 003 | Value Objects não implementados          | 2026-07 | Aceita |
+| 004 | Guid v7 como chave primária              | 2026-07 | Aceita |
+| 005 | SHA-256 no TokenHash                     | 2026-07 | Aceita |
+| 006 | Snapshot de preço em OrderItem           | 2026-07 | Aceita |
+| 007 | TimeProvider adiado                      | 2026-07 | Adiada |
+| 008 | Result Pattern com implementação própria | 2026-07 | Aceita |
 
 ---
 
@@ -154,3 +155,26 @@ para resolver um único `Thread.Sleep(10)` numa suíte que roda em 2,7s.
 
 **Revisar quando:** a camada Application precisar testar expiração de JWT ou
 rotação de refresh token com janelas de tempo realistas.
+
+---
+
+## ADR-008: Result Pattern com implementação própria
+
+**Contexto:** regras de negócio precisam sinalizar falha esperada (e-mail já
+cadastrado, estoque insuficiente) sem usar exception para controle de fluxo.
+
+**Decisão:** implementar `Result` e `Result<T>` próprios na camada Application,
+em vez de adotar uma biblioteca como `ErrorOr` ou `FluentResults`.
+
+**Alternativa considerada:** biblioteca pronta. Descartada para este projeto
+pelo objetivo de portfólio: implementar o padrão demonstra compreensão do
+conceito, não apenas uso de API. Em um produto de produção com equipe, a
+biblioteca seria a escolha (menos código de infraestrutura para manter).
+
+**Trade-off:**
+- Ganho: controle total, zero dependência, valor didático e de entrevista.
+- Custo: código de infraestrutura sob manutenção própria; se evoluir para
+  múltiplos erros ou códigos tipados, passa a competir com libs maduras.
+
+**Revisar quando:** o projeto deixar de ser portfólio e virar base de produto,
+ou o `Result` precisar de recursos que uma lib já resolve.
